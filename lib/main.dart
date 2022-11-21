@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'dart:convert';
 
 void main(){
@@ -60,7 +61,11 @@ class _portflix extends State<portflix> {
               controller: movieName,
             ),
 
-            ElevatedButton(onPressed: _search, child: const Text("Search")),
+            ElevatedButton(onPressed: () {
+                  showProgress(context);
+                },
+                child: Text('Search'),
+            ),
 
             const Text(""),
 
@@ -94,6 +99,14 @@ class _portflix extends State<portflix> {
     );
   }
  
+  Future<void> showProgress(BuildContext context) async {
+    var result = await showDialog(
+      context: context,
+      builder: (context) =>
+          FutureProgressDialog(_search(), message: Text('Loading...')),
+    );
+  }
+
   Future<void> _search() async {
     var name = movieName.text;
     var apiid = "e2d73d5a";
